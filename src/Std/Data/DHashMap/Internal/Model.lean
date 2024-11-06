@@ -322,6 +322,13 @@ def mapₘ (m : Raw₀ α β) (f : (a : α) → β a → δ a) : Raw₀ α δ :=
 def filterₘ (m : Raw₀ α β) (f : (a : α) → β a → Bool) : Raw₀ α β :=
   ⟨withComputedSize (updateAllBuckets m.1.buckets fun l => l.filter f), by simpa using m.2⟩
 
+/-- Internal implementation detail of the hash map -/
+def insertManyₘ_list [BEq α] [Hashable α] (m : Raw₀ α β) (l: List ((a:α) × β a)): Raw₀ α β :=
+  match l with
+  | [] => m
+  | hd::tl =>
+    insertManyₘ_list (m.insert hd.1 hd.2) tl
+
 section
 
 variable {β : Type v}
@@ -454,6 +461,17 @@ theorem map_eq_mapₘ (m : Raw₀ α β) (f : (a : α) → β a → δ a) :
 
 theorem filter_eq_filterₘ (m : Raw₀ α β) (f : (a : α) → β a → Bool) :
     m.filter f = m.filterₘ f := rfl
+
+theorem insertMany_eq_insertManyₘ_list [BEq α] [Hashable α] (m : Raw₀ α β) (l: List ((a:α) × β a)):
+    m.insertMany l = m.insertManyₘ_list l := by
+      simp[insertMany, Id.run]
+      induction l generalizing m with
+      | nil => simp[insertManyₘ_list]
+      | cons hd tl ih =>
+        specialize ih (m.insert hd.1 hd.2)
+        simp[insertManyₘ_list]
+        rw [← ih]
+        simp -- both strings look the same to me
 
 section
 
