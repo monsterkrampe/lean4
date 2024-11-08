@@ -111,6 +111,16 @@ theorem pairwise_keys_iff_pairwise_keys [BEq α] [PartialEquivBEq α] {m : Raw �
       (List.keys (toListModel m.buckets)).Pairwise (fun a b => (a == b) = false) :=
   keys_perm_keys_toListModel.pairwise_iff BEq.symm_false
 
+-- TODO (lukas): clean this up
+theorem ofList_perm [BEq α] [Hashable α] {l : List ((a : α) × β a)} : 
+  Perm (toListModel (Raw.ofList l).buckets) l := by 
+  induction l with 
+  | nil => simp [Raw.ofList, Raw.insertMany, Raw₀.insertMany, Id.run, EmptyCollection.emptyCollection, Raw.empty, Raw₀.empty]
+  | cons a as ih =>
+    simp [Raw.ofList, Raw.insertMany, Raw₀.insertMany]
+    simp [EmptyCollection.emptyCollection, Raw.empty, Raw₀.empty]
+    sorry
+
 end Raw
 
 namespace Raw₀

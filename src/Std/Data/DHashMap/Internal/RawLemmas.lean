@@ -87,7 +87,8 @@ private def queryNames : Array Name :=
     ``getKey_eq_getKey, ``getKeyD_eq_getKeyD, ``getKey!_eq_getKey!,
     ``Raw.length_keys_eq_length_keys, ``Raw.isEmpty_keys_eq_isEmpty_keys,
     ``Raw.contains_keys_eq_contains_keys, ``Raw.mem_keys_iff_contains_keys,
-    ``Raw.pairwise_keys_iff_pairwise_keys]
+    ``Raw.pairwise_keys_iff_pairwise_keys, ``Raw.ofList_perm]
+-- TODO: ofList_perm does not seem to be applied by simp_to_model; find out why...
 
 private def modifyNames : Array Name :=
   #[``toListModel_insert, ``toListModel_erase, ``toListModel_insertIfNew]
@@ -838,6 +839,14 @@ theorem mem_keys [LawfulBEq α] [LawfulHashable α] (h : m.1.WF) {k : α} :
 theorem distinct_keys [EquivBEq α] [LawfulHashable α] (h : m.1.WF) :
     m.1.keys.Pairwise (fun a b => (a == b) = false) := by
   simp_to_model using (Raw.WF.out h).distinct.distinct
+
+theorem ofList_contains [EquivBEq α] [LawfulHashable α] {l : List ((a : α) × β a)} {k : α} :
+    Raw₀.contains (⟨(Raw.ofList l), (Raw.WF.ofList (l := l)).size_buckets_pos⟩ : Raw₀ _ _) k = ((l.map Sigma.fst).contains k) := by 
+  have WF := Raw.WF.ofList (l := l)
+  simp_to_model
+  rw [containsKey_of_perm]
+  apply List.containsKey_eq_contains_map_fst
+  apply Raw.ofList_perm
 
 end Raw₀
 

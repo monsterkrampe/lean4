@@ -1047,6 +1047,11 @@ theorem distinct_keys [EquivBEq α] [LawfulHashable α] (h : m.WF) :
     m.keys.Pairwise (fun a b => (a == b) = false) := by
   simp_to_raw using Raw₀.distinct_keys ⟨m, h.size_buckets_pos⟩ h
 
+theorem ofList_contains [EquivBEq α] [LawfulHashable α] {l : List ((a : α) × β a)} {k : α} :
+    (Raw.ofList l).contains k = ((l.map Sigma.fst).contains k) := by 
+  have WF := Raw.WF.ofList (l := l)
+  simp_to_raw using Raw₀.ofList_contains
+
 end Raw
 
 end Std.DHashMap

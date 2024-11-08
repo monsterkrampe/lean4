@@ -257,6 +257,9 @@ theorem containsKey_eq_isSome_getEntry? [BEq α] {l : List ((a : α) × β a)} {
     · simp [getEntry?_cons_of_false h, h, ih]
     · simp [getEntry?_cons_of_true h, h]
 
+theorem containsKey_eq_contains_map_fst [BEq α] {l : List ((a : α) × β a)} {a : α} :
+    containsKey a l = (l.map Sigma.fst).contains a := by sorry
+
 theorem isEmpty_eq_false_of_containsKey [BEq α] {l : List ((a : α) × β a)} {a : α}
     (h : containsKey a l = true) : l.isEmpty = false := by
   cases l <;> simp_all

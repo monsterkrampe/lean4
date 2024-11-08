@@ -298,8 +298,8 @@ but will later become a primitive operation.
    (Raw₀.Const.insertManyUnit ⟨m.1, m.2.size_buckets_pos⟩ l).2 _ Raw.WF.insert₀ m.2⟩
 
 @[inline, inherit_doc Raw.ofList] def ofList [BEq α] [Hashable α] (l : List ((a : α) × β a)) :
-    DHashMap α β :=
-  insertMany ∅ l
+    DHashMap α β := 
+  ⟨Raw.ofList l, Raw.WF.ofList (l := l)⟩
 
 /-- Computes the union of the given hash maps, by traversing `m₂` and inserting its elements into `m₁`. -/
 @[inline] def union [BEq α] [Hashable α] (m₁ m₂ : DHashMap α β) : DHashMap α β :=

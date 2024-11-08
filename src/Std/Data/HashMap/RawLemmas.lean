@@ -706,6 +706,16 @@ theorem distinct_keys [EquivBEq α] [LawfulHashable α] (h : m.WF) :
     m.keys.Pairwise (fun a b => (a == b) = false) := 
   DHashMap.Raw.distinct_keys h.out
 
+theorem ofList_contains [EquivBEq α] [LawfulHashable α] {l : List (α × β)} {k : α} :
+    (ofList l).contains k = ((l.map Prod.fst).contains k) := by
+  have : (ofList l).inner = DHashMap.Raw.ofList (l.map (fun p => ⟨p.fst, p.snd⟩)) := by 
+    sorry
+  unfold contains
+  rw [this]
+  rw [DHashMap.Raw.ofList_contains]
+  simp
+  sorry
+
 end Raw
 
 end Std.HashMap

@@ -968,4 +968,9 @@ theorem distinct_keys [EquivBEq α] [LawfulHashable α] :
     m.keys.Pairwise (fun a b => (a == b) = false) := 
   Raw₀.distinct_keys ⟨m.1, m.2.size_buckets_pos⟩ m.2
 
+theorem ofList_contains [EquivBEq α] [LawfulHashable α] {l : List ((a : α) × β a)} {k : α} :
+    (ofList l).contains k = ((l.map Sigma.fst).contains k) := by 
+  unfold contains
+  apply Raw₀.ofList_contains
+
 end Std.DHashMap
